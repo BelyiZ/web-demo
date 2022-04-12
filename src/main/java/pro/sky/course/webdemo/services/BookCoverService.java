@@ -51,8 +51,8 @@ public class BookCoverService {
 
         try (InputStream is = file.getInputStream();
              OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1010);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1010);
+             BufferedInputStream bis = new BufferedInputStream(is, 1000);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1000);
         ) {
             bis.transferTo(bos);
         }
