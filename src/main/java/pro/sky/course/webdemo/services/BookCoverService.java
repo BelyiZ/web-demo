@@ -51,8 +51,8 @@ public class BookCoverService {
 
         try (InputStream is = file.getInputStream();
              OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1010);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1010);
+             BufferedInputStream bis = new BufferedInputStream(is, 2048);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 2048);
         ) {
             bis.transferTo(bos);
         }
@@ -75,14 +75,14 @@ public class BookCoverService {
 
     private byte[] generateImagePreview(Path filePath) throws IOException {
         try (InputStream is = Files.newInputStream(filePath);
-             BufferedInputStream bis = new BufferedInputStream(is, 1000);
+             BufferedInputStream bis = new BufferedInputStream(is, 100);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             BufferedImage image = ImageIO.read(bis);
 
-            int height = image.getHeight() / (image.getWidth() / 100);
-            BufferedImage preview = new BufferedImage(100, height, image.getType());
+            int height = image.getHeight() / (image.getWidth() / 300);
+            BufferedImage preview = new BufferedImage(300, height, image.getType());
             Graphics2D graphics = preview.createGraphics();
-            graphics.drawImage(image, 0, 0, 100, height, null);
+            graphics.drawImage(image, 0, 0, 300, height, null);
             graphics.dispose();
 
             ImageIO.write(preview, getExtension(filePath.getFileName().toString()), baos);
