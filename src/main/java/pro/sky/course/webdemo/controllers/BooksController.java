@@ -46,8 +46,8 @@ public class BooksController {
 
     @GetMapping // GET http://localhost:8080/books
     public ResponseEntity<Object> findBooks(@RequestParam(required = false) String name,
-                                    @RequestParam(required = false) String author,
-                                    @RequestParam(required = false) String namePart) {
+                                            @RequestParam(required = false) String author,
+                                            @RequestParam(required = false) String namePart) {
         if (name != null && !name.isBlank()) {
             return ResponseEntity.ok(bookService.findByName(name));
         }
@@ -82,8 +82,9 @@ public class BooksController {
 
     @PostMapping(value = "/{id}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadCover(@PathVariable Long id, @RequestParam MultipartFile cover) throws IOException {
-        if (cover.getSize() > 1024 * 1024 * 500) {
-            return ResponseEntity.badRequest().body("File is too big. Max file size is 500 MB");
+        int maxFileSize = 1024 * 1024 * 500;
+        if (cover.getSize() > maxFileSize) {
+            return ResponseEntity.badRequest().body("File is too big. Max file size is " + maxFileSize + " MB");
         }
 
         bookCoverService.uploadCover(id, cover);
