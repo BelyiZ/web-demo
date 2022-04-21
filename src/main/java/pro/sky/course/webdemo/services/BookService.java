@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pro.sky.course.webdemo.model.Book;
@@ -27,6 +28,11 @@ import pro.sky.course.webdemo.repositories.BookRepository;
 
 @Service
 public class BookService {
+
+    /**
+     * asfasdsa dasdsad as dasd
+     */
+    public static final String CONST = "saasdad";
 
     private final BookRepository bookRepository;
 
@@ -38,6 +44,16 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    /**
+     * Поиск книги по ее идентификатору в БД. <b>жирный</b> <i>курсив</i> <u>подчеркнутый</u>
+     * Используется метод репозитория {@link JpaRepository#findById(Object)}
+     *
+     * @param id идентификатор искомой книги, не может быть null
+     * @throws EntityNotFoundException если книга с указанным id не была найдена в БД
+     * @return найденная книга
+     *
+     * @see JpaRepository#findById(Object)
+     */
     public Book findBook(long id) {
         return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
     }

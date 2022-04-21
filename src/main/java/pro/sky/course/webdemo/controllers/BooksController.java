@@ -1,9 +1,15 @@
 package pro.sky.course.webdemo.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.servlet.http.HttpServletResponse;
@@ -44,10 +50,30 @@ public class BooksController {
         return ResponseEntity.ok(book);
     }
 
+    @Operation(
+            summary = "Поиск книг по названию, автору или части названия",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Найденные книги",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = Book.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если книги не найдены"
+                    )
+            },
+            tags = "Books"
+
+    )
     @GetMapping // GET http://localhost:8080/books
-    public ResponseEntity<Object> findBooks(@RequestParam(required = false) String name,
-                                    @RequestParam(required = false) String author,
-                                    @RequestParam(required = false) String namePart) {
+    public ResponseEntity<Object> findBooks(@Parameter(description = "Название книги целиком", example = "Война и мир")
+                                            @RequestParam(required = false) String name,
+                                            @RequestParam(required = false, name = "Фамилия автора") String author,
+                                            @RequestParam(required = false) String namePart) {
         if (name != null && !name.isBlank()) {
             return ResponseEntity.ok(bookService.findByName(name));
         }
@@ -65,6 +91,15 @@ public class BooksController {
         return bookService.createBook(book);
     }
 
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Редкатируемая книга",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Book.class)
+                    )
+            )
+    )
     @PutMapping // PUT http://localhost:8080/books
     public ResponseEntity<Book> editBook(@RequestBody Book book) {
         Book foundBook = bookService.editBook(book);
