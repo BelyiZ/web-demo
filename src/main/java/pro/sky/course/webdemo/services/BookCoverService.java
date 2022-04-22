@@ -57,7 +57,12 @@ public class BookCoverService {
             bis.transferTo(bos);
         }
 
-        BookCover bookCover = findBookCover(bookId);
+        BookCover bookCover;
+        try {
+            bookCover = findBookCover(bookId);
+        } catch (EntityNotFoundException e) {
+            bookCover = new BookCover();
+        }
         bookCover.setBook(book);
         bookCover.setFilePath(filePath.toString());
         bookCover.setFileSize(file.getSize());

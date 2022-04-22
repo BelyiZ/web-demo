@@ -29,11 +29,6 @@ import pro.sky.course.webdemo.repositories.BookRepository;
 @Service
 public class BookService {
 
-    /**
-     * asfasdsa dasdsad as dasd
-     */
-    public static final String CONST = "saasdad";
-
     private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
